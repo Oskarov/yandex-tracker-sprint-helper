@@ -4,7 +4,8 @@ export interface ITask {
     number: string,
     capacity: number,
     type: number,
-    projectId: number
+    projectId: number,
+    project?: string
 }
 
 export interface ITasksState {
@@ -16,12 +17,11 @@ export const TASK_TYPES_ENUM = {
     MEETINGS: 20,
     VACATION: 30,
     HOLLYDAYS: 40,
-    BACKEND_TASK: 110,
-    BACKEND_BUG: 120,
-    BACKEND_TECH_DEBT: 130,
-    FRONTEND_TASK: 210,
-    FRONTEND_BUG: 220,
-    FRONTEND_TECH_DEBT: 240
+    DEV_TASK: 50,
+    TESTING: 60,
+    ANALYTICS: 70,
+    DEPLOY: 80,
+    OTHER: 90
 }
 
 
@@ -38,45 +38,29 @@ export const taskTypes = [
     },
     {
         id: 3,
-        name: 'Бэкэнд Задача',
-        type: TASK_TYPES_ENUM.BACKEND_TASK
+        name: 'Разработка',
+        type: TASK_TYPES_ENUM.DEV_TASK
     },
     {
         id: 4,
-        name: 'Бэкэнд Баг',
-        type: TASK_TYPES_ENUM.BACKEND_BUG
+        name: 'Тестирование',
+        type: TASK_TYPES_ENUM.TESTING
     },
     {
         id: 5,
-        name: 'Бэкэнд Техдолг',
-        type: TASK_TYPES_ENUM.BACKEND_TECH_DEBT
+        name: 'Аналитика',
+        type: TASK_TYPES_ENUM.ANALYTICS
     },
-
     {
         id: 6,
-        name: 'Фронтенд Задача',
-        type: TASK_TYPES_ENUM.FRONTEND_TASK
+        name: 'Деплой',
+        type: TASK_TYPES_ENUM.DEPLOY
     },
     {
         id: 7,
-        name: 'Фронтенд Баг',
-        type: TASK_TYPES_ENUM.FRONTEND_BUG
-    },
-    {
-        id: 8,
-        name: 'Фронтенд Техдолг',
-        type: TASK_TYPES_ENUM.FRONTEND_TECH_DEBT
-    },
-    {
-        id: 9,
-        name: 'Отпуск',
-        type: TASK_TYPES_ENUM.VACATION
-    },
-    {
-        id: 10,
-        name: 'Праздники',
-        type: TASK_TYPES_ENUM.HOLLYDAYS
-    },
+        name: 'Другое',
+        type: TASK_TYPES_ENUM.OTHER
+    }
 ];
 
 export const projectsList = [

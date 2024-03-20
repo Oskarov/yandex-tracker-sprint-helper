@@ -5,6 +5,7 @@ import styles           from "./main.module.scss";
 import Control          from "./control/control";
 import Settings         from "./settings/settings";
 import Header           from "./header/header";
+import Projects         from "./projects/projects";
 
 interface MainProps {
 
@@ -15,6 +16,7 @@ const Main: React.FC<MainProps> = ({}) => {
         <Header/>
         <ListOfPerformers/>
         <Backlog/>
+        <Projects/>
         <Control/>
         <Settings/>
     </div>;

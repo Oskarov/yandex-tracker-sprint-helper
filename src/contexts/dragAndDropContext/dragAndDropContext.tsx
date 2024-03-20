@@ -4,6 +4,7 @@ import {useDispatch, useSelector}                                               
 import {store, TStore}                                                               from "../../store/store";
 import {changeTaskIndex, createTaskWithIndex, removeTask}                            from "../../slices/tasks";
 import {addTaskForPerformerWithIndex, changePerformerTaskIndex, removePerformerTask} from "../../slices/performers";
+import {removeTaskFromProject}                                                       from "../../slices/tracker";
 
 interface DragAndDropContextProps {
     children: any
@@ -84,6 +85,21 @@ const DragAndDropContext: React.FC<DragAndDropContextProps> = ({children}) => {
                 }
             }
         }
+
+        //Из проекта исполнителю
+        if (result.source.droppableId.includes('project') && !result.destination?.droppableId.includes('project') && !result.destination?.droppableId.includes('backlog') && !!result.destination?.droppableId) {
+            const project = store.getState().tracker.projects[result.source.droppableId.replace('project-','')];
+            const task = project.tasks.find(i => i.uuid === result.draggableId);
+            if (task) {
+                dispatch(removeTaskFromProject({projectId: result.source.droppableId.replace('project-',''), taskUuid: task.uuid}));
+                dispatch(addTaskForPerformerWithIndex({
+                    index: result.destination.index,
+                    task,
+                    performerUuid: result.destination.droppableId
+                }));
+            }
+        }
+
     };
 
     return <DragDropContext

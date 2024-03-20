@@ -23,7 +23,7 @@ const initialTaskData = {
     name: '',
     number: '',
     capacity: 1,
-    type: TASK_TYPES_ENUM.BACKEND_TASK
+    type: TASK_TYPES_ENUM.DEV_TASK
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({}) => {

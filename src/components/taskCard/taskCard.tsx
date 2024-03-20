@@ -62,7 +62,11 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
     }
 
     const project = projectsList.find(i => i.id === item.projectId);
-
+    let capacity = targetTask !== item.number
+        ? item.capacity
+        : item.capacity > 10
+            ? item.capacity
+            : 10;
 
     return <div
         onMouseOver={(e) => {
@@ -78,7 +82,7 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
         style={getItemStyle(
             snapshot.isDragging,
             provided.draggableProps.style,
-            item.capacity,
+            capacity,
             app.valueOfDivision
         )}
         className={CN(styles.task, {
@@ -86,12 +90,6 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
             [styles.onDraw]: snapshot.isDragging,
             [styles.review]: item.type === TASK_TYPES_ENUM.REVIEW,
             [styles.meetings]: item.type === TASK_TYPES_ENUM.MEETINGS,
-            [styles.backendTask]: item.type === TASK_TYPES_ENUM.BACKEND_TASK,
-            [styles.backendBug]: item.type === TASK_TYPES_ENUM.BACKEND_BUG,
-            [styles.backendTechDebt]: item.type === TASK_TYPES_ENUM.BACKEND_TECH_DEBT,
-            [styles.frontendTask]: item.type === TASK_TYPES_ENUM.FRONTEND_TASK,
-            [styles.frontendBug]: item.type === TASK_TYPES_ENUM.FRONTEND_BUG,
-            [styles.frontendTechDebt]: item.type === TASK_TYPES_ENUM.FRONTEND_TECH_DEBT,
             [styles.vacation]: item.type === TASK_TYPES_ENUM.VACATION,
             [styles.hollydays]: item.type === TASK_TYPES_ENUM.HOLLYDAYS,
         })}

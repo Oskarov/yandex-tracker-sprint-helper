@@ -29,7 +29,7 @@ const Metrics: React.FC<MetricsProps> = ({performer}) => {
         if ([TASK_TYPES_ENUM.MEETINGS, TASK_TYPES_ENUM.REVIEW, TASK_TYPES_ENUM.VACATION, TASK_TYPES_ENUM.HOLLYDAYS].includes(task.type)) {
             noWorking = noWorking + task.capacity;
         }
-        if ([TASK_TYPES_ENUM.FRONTEND_TASK, TASK_TYPES_ENUM.BACKEND_TASK].includes(task.type)) {
+      /*  if ([TASK_TYPES_ENUM.FRONTEND_TASK, TASK_TYPES_ENUM.BACKEND_TASK].includes(task.type)) {
             product = product + task.capacity
             productCount++;
         }
@@ -40,7 +40,7 @@ const Metrics: React.FC<MetricsProps> = ({performer}) => {
         if ([TASK_TYPES_ENUM.FRONTEND_TECH_DEBT, TASK_TYPES_ENUM.BACKEND_TECH_DEBT].includes(task.type)) {
             techdebt = techdebt + task.capacity
             techdebtCount++;
-        }
+        }*/
     });
 
     const sprintSize = app.sprintSize - noWorking;
