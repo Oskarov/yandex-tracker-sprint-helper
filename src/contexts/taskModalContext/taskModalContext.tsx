@@ -29,11 +29,12 @@ export const TaskModalContextChanger = createContext<((data: ITaskModalContextDa
 const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
 
     const initialTaskData = {
+        project: '',
         name: '',
         number: '',
         capacity: 1,
         type: TASK_TYPES_ENUM.DEV_TASK,
-        projectId: 10,
+        component: '',
     }
 
     const dispatch = useDispatch();
@@ -57,7 +58,8 @@ const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
                     type: backlogTask.type,
                     number: backlogTask.number,
                     capacity: backlogTask.capacity,
-                    projectId: backlogTask.projectId
+                    project: backlogTask.project,
+                    component: backlogTask.component,
                 })
             }
         }
@@ -74,7 +76,8 @@ const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
                     type: performerTask.type,
                     number: performerTask.number,
                     capacity: performerTask.capacity,
-                    projectId: performerTask.projectId
+                    project: performerTask.project,
+                    component: performerTask.component
                 })
             }
         }
@@ -211,11 +214,25 @@ const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
                     }}
                     variant="standard"
                 />
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="component"
+                    label="Компонент"
+                    placeholder="МС Интервалы"
+                    fullWidth
+                    value={taskData.component}
+                    onChange={(e) => {
+                        handleTaskDataChange('component', e.target.value)
+                    }}
+                    variant="standard"
+                />
+
                 <FormControl variant="standard" className={styles.taskType}>
                     <Select
                         id="type"
                         value={taskData.type}
-                        label="Age"
+                        label="Тип задачи"
                         fullWidth={true}
                         onChange={handleTypeChange}
                     >
@@ -223,18 +240,7 @@ const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
                                                              key={taskType.id}>{taskType.name}</MenuItem>)}
                     </Select>
                 </FormControl>
-                <FormControl variant="standard" className={styles.projectType}>
-                    <Select
-                        id="type"
-                        value={taskData.projectId}
-                        label="Age"
-                        fullWidth={true}
-                        onChange={handleProjectChange}
-                    >
-                        {projectsList.map(pr => <MenuItem value={pr.id}
-                                                          key={pr.id}>{pr.name}</MenuItem>)}
-                    </Select>
-                </FormControl>
+
 
             </DialogContent>
             <DialogActions>

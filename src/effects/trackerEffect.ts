@@ -72,6 +72,7 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
         const projects: IProjects = {};
         trackerTasks.forEach(trackerTask => {
             let pass = false;
+            let taskFirstComponent = trackerTask.components?.length ? trackerTask.components[0].display : '';
             performers.forEach(performer => {
                 performer.tasks.forEach(task => {
                     if (task.number === trackerTask.key) {
@@ -82,10 +83,10 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                                 uuid: task.uuid,
                                 number: task.number,
                                 name: trackerTask.summary,
-                                project: trackerTask.project?.display,
-                                projectId: 0,
+                                project: trackerTask.project?.display || '',
                                 capacity: trackerTask.originalEstimation ? calculateHoursFromTrackerTack(trackerTask.originalEstimation) : task.capacity,
-                                type: CalculateTypeFromTrackerTack(trackerTask.type.display)
+                                type: CalculateTypeFromTrackerTack(trackerTask.type.key),
+                                component: taskFirstComponent
                             }
                         }))
                     }
@@ -95,6 +96,10 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                 const project = trackerTask.project?.id ? trackerTask.project?.id : '0';
                 let projectTasks = projects[project]?.tasks || [];
                 let projectOpen = projects[project]?.isOpen || true;
+                if (trackerTask.key === 'TMS-196'){
+                    console.log(trackerTask)
+                    console.log( CalculateTypeFromTrackerTack(trackerTask.type.key))
+                }
                 projects[project] = {
                     name: trackerTask.project?.display || 'Без проекта',
                     isOpen: projectOpen,
@@ -102,10 +107,10 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                         uuid: generateRandomString(10),
                         number: trackerTask.key,
                         name: trackerTask.summary,
-                        project: trackerTask.project?.display,
-                        projectId: 0,
+                        project: trackerTask.project?.display || '',
                         capacity: trackerTask.originalEstimation ? calculateHoursFromTrackerTack(trackerTask.originalEstimation) : 1,
-                        type: CalculateTypeFromTrackerTack(trackerTask.type.display)
+                        type: CalculateTypeFromTrackerTack(trackerTask.type.key),
+                        component: taskFirstComponent
                     }]
                 }
             }

@@ -29,10 +29,10 @@ export interface ITrackerQueueTask {
         key: string,
         display: string,
     }
-    component?: {
+    components?: {
         id: string,
         display: string
-    },
+    }[],
     project?: {
         id: string,
         display: string

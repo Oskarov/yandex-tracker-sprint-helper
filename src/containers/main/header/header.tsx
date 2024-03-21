@@ -8,7 +8,6 @@ import {TASK_TYPES_ENUM}          from "../../../interfaces/ITask";
 import {PERFORMER_TYPES_ENUM}     from "../../../interfaces/IPerformers";
 import ToJson                     from "./toJson/toJson";
 import FromJson                   from "./fromJson/fromJson";
-import JiraStat                   from "./jiraStat/jiraStat";
 import FromTracker                from "./fromTracker/fromTracker";
 
 interface HeaderProps {
@@ -16,18 +15,11 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = () => {
-
-
-
-
-
-
     return <div className={styles.header}>
         <div className={styles.title}>Планирование спринта</div>
         <div className={styles.buttons}>
             <ToJson/>
             <FromJson/>
-            <JiraStat/>
             <FromTracker/>
         </div>
     </div>;

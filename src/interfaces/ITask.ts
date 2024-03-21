@@ -4,8 +4,8 @@ export interface ITask {
     number: string,
     capacity: number,
     type: number,
-    projectId: number,
-    project?: string
+    project: string,
+    component: string,
 }
 
 export interface ITasksState {

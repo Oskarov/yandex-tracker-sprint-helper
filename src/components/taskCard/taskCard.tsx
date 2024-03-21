@@ -61,7 +61,6 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
         console.log(e)
     }
 
-    const project = projectsList.find(i => i.id === item.projectId);
     let capacity = targetTask !== item.number
         ? item.capacity
         : item.capacity > 10
@@ -92,6 +91,11 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
             [styles.meetings]: item.type === TASK_TYPES_ENUM.MEETINGS,
             [styles.vacation]: item.type === TASK_TYPES_ENUM.VACATION,
             [styles.hollydays]: item.type === TASK_TYPES_ENUM.HOLLYDAYS,
+            [styles.dev]: item.type === TASK_TYPES_ENUM.DEV_TASK,
+            [styles.analytics]: item.type === TASK_TYPES_ENUM.ANALYTICS,
+            [styles.test]: item.type === TASK_TYPES_ENUM.TESTING,
+            [styles.deploy]: item.type === TASK_TYPES_ENUM.DEPLOY,
+            [styles.other]: item.type === TASK_TYPES_ENUM.OTHER,
         })}
     >
 
@@ -120,12 +124,12 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
             <div className={styles.number}><a href={`https://tracker.yandex.ru/${item.number}`}
                                               target={"_blank"} rel={"noreferrer`"}>{item.number}</a></div>
             <div className={styles.name}>
-                <Tooltip title={`[${project?.name || ''}] ${item.number} ${item.name} (${item.capacity})`}>
+                <Tooltip title={`[${item.project}] ${item.number} ${item.name} (${item.capacity})`}>
                     <span>{item.name}</span>
                 </Tooltip>
             </div>
-            {project && <div className={styles.projectMarker} style={{backgroundColor: project.color}}>
-                {project.name}
+            {!!item.component && <div className={styles.projectMarker} style={{backgroundColor: '#009dff52'}}>
+                {item.component}
             </div>}
 
         </div>}

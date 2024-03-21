@@ -1,7 +1,7 @@
 const CalculateTypeFromTrackerTack = (type: string) => {
     switch (type) {
-        case 'devtask':
-            return 3;
+        case "devTask":
+            return 50;
         default:
             return 1;
     }

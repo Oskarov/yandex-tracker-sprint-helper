@@ -32,19 +32,19 @@
     background: #fa5656;
   }
 
-  &.backendTask {
+  &.test {
     background: #8295e1;
   }
 
-  &.frontendTask {
+  &.dev {
     background: #82e18a;
   }
 
-  &.frontendTechDebt {
+  &.deploy {
     background: #faad56;
   }
 
-  &.frontendBug {
+  &.analytics {
     background: #be56fa;
   }
 
@@ -62,6 +62,8 @@
 }
 
 .projectMarker{
+  height: 13px;
+  overflow: hidden;
   position: absolute;
   bottom: 0;
   left: 0;

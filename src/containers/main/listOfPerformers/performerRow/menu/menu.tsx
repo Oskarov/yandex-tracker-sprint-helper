@@ -1,18 +1,18 @@
-import React, {useContext} from 'react';
+import React, {useContext}                                                                from 'react';
 import {Menu, Divider, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Typography} from "@mui/material";
-import {Cloud, ContentCopy, ContentCut, ContentPaste} from "@mui/icons-material";
-import {useDispatch} from "react-redux";
-import {IPerformerItem} from "../../../../../interfaces/IPerformers";
-import {setConfirmationOpen} from "../../../../../slices/modal";
+import {Cloud, ContentCopy, ContentCut, ContentPaste}                                     from "@mui/icons-material";
+import {useDispatch}                                                                      from "react-redux";
+import {IPerformerItem}                                                                   from "../../../../../interfaces/IPerformers";
+import {setConfirmationOpen}                                                              from "../../../../../slices/modal";
 import {
     removePerformer,
     removePerformerTask
-} from "../../../../../slices/performers";
-import {PerformerModalContextChanger} from "../../../../../contexts/performerModalContext/performerContext";
+}                                                                                         from "../../../../../slices/performers";
+import {PerformerModalContextChanger}                                                     from "../../../../../contexts/performerModalContext/performerContext";
 import {
     projectsList,
     TASK_TYPES_ENUM
-} from "../../../../../interfaces/ITask";
+}                                                                                         from "../../../../../interfaces/ITask";
 
 interface menuProps {
     contextMenu: { mouseX: number, mouseY: number } | null,
@@ -65,8 +65,7 @@ const PerformerMenu: React.FC<menuProps> = ({contextMenu, setContextMenu, perfor
     const handleCopy = () => {
         let text = 'Задачи нового спринта:\r\n';
         performer.tasks.filter(task => ![TASK_TYPES_ENUM.VACATION, TASK_TYPES_ENUM.REVIEW, TASK_TYPES_ENUM.HOLLYDAYS, TASK_TYPES_ENUM.MEETINGS].includes(task.type)).forEach(task => {
-            const project = projectsList.find(i => i.id === task.projectId);
-            text = text + `[${project?.name}] ${task.name} (https://tracker.yandex.ru/${task.number})\r\n`
+            text = text + `[${task.project}] ${task.name} (https://tracker.yandex.ru/${task.number})\r\n`
         })
         const cp = navigator.clipboard;
         if (!cp) {
