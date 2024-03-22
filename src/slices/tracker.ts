@@ -1,11 +1,26 @@
 import {createSlice, PayloadAction}                              from '@reduxjs/toolkit';
 import {IPerformerItem, IPerformersState, IPerformerTaskPayload} from "../interfaces/IPerformers";
-import {ITask}                                         from "../interfaces/ITask";
-import {IProjects, ITrackerQueueImport, ITrackerState} from "../interfaces/ITracker";
+import {ITask}                                                   from "../interfaces/ITask";
+import {IProjects, ITrackerQueueImport, ITrackerState}           from "../interfaces/ITracker";
 
 const initialState: ITrackerState = {
     queues: [],
     projects: {}
+}
+
+const project = {
+    'alpha': {
+        cost: 0,
+        pay: 1,
+    },
+    'betta': {
+        cost: 0,
+        pay: 1,
+    },
+    gamma: {
+        cost: 0,
+        pay: 1,
+    }
 }
 
 
@@ -25,29 +40,45 @@ const trackerSlice = createSlice({
                 projects: payload
             };
         },
-        removeTaskFromProject: (state, {payload}: PayloadAction<{projectId:string, taskUuid:string}>) => {
+        removeTaskFromProject: (state, {payload}: PayloadAction<{ projectId: string, taskUuid: string }>) => {
             return {
                 ...state,
                 projects: {
                     ...state.projects,
-                    [payload.projectId] : {
+                    [payload.projectId]: {
                         ...state.projects[payload.projectId],
-                        tasks: state.projects[payload.projectId].tasks.filter(i=>i.uuid !== payload.taskUuid)
+                        tasks: state.projects[payload.projectId].tasks.filter(i => i.uuid !== payload.taskUuid)
                     }
 
                 }
             };
         },
-        changeProjectOpenState:(state, {payload}: PayloadAction<{projectId:string, isOpen:boolean}>) => {
+        changeProjectOpenState: (state, {payload}: PayloadAction<{ projectId: string, isOpen: boolean }>) => {
             return {
                 ...state,
                 projects: {
                     ...state.projects,
-                    [payload.projectId] : {
+                    [payload.projectId]: {
                         ...state.projects[payload.projectId],
                         isOpen: payload.isOpen
                     }
                 }
+            };
+        },
+        changeAllProjectsOpenState: (state, {payload}: PayloadAction<boolean>) => {
+            function updateIsOpen(project: IProjects, isOpenState: boolean) {
+                const updatedProject: IProjects = {};
+
+                for (let key in project) {
+                    updatedProject[key] = {...project[key], isOpen: isOpenState};
+                }
+
+                return updatedProject;
+            }
+
+            return {
+                ...state,
+                projects: updateIsOpen(state.projects, payload)
             };
         },
     }
@@ -58,5 +89,6 @@ export const {
     changeQueues,
     changeProjects,
     removeTaskFromProject,
-    changeProjectOpenState
+    changeProjectOpenState,
+    changeAllProjectsOpenState
 } = trackerSlice.actions;

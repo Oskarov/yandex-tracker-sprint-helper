@@ -1,6 +1,6 @@
-import React, {useState}                         from 'react';
-import {Dialog, DialogContent, TextareaAutosize} from "@mui/material";
-import styles                                    from "../../../../components/reduxInformationDialog/index.module.scss";
+import React, {useState}                                  from 'react';
+import {Dialog, DialogContent, TextareaAutosize, Tooltip} from "@mui/material";
+import styles                                             from "../../../../components/reduxInformationDialog/index.module.scss";
 import CloseIcon                                 from "@mui/icons-material/Close";
 import SaveAltIcon                               from '@mui/icons-material/SaveAlt';
 import {useDispatch, useSelector}                from "react-redux";
@@ -27,9 +27,11 @@ const FromJson: React.FC = () => {
     }
 
     return <div>
-        <div onClick={() => setIsOpen(true)}>
-            <SaveAltIcon/>
-        </div>
+        <Tooltip title="Загрузить сохранённый json Спринта">
+            <div onClick={() => setIsOpen(true)}>
+                <SaveAltIcon/>
+            </div>
+        </Tooltip>
         <Dialog
             open={isOpen}
             onClose={() => setIsOpen(false)}

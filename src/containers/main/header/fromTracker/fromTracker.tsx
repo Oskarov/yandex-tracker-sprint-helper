@@ -1,14 +1,17 @@
-import React, {useEffect, useState}                                       from 'react';
-import ArchiveIcon                                                        from '@mui/icons-material/Archive';
-import {Autocomplete, Dialog, DialogContent, TextareaAutosize, TextField} from "@mui/material";
+import React, {useEffect, useState}                                                from 'react';
+import ArchiveIcon                                                                 from '@mui/icons-material/Archive';
+import {Autocomplete, Dialog, DialogContent, TextareaAutosize, TextField, Tooltip} from "@mui/material";
 import styles
-                                                                          from "../../../../components/reduxInformationDialog/index.module.scss";
-import styles2                                                            from "./fromTracker.module.scss";
-import CloseIcon                                                          from "@mui/icons-material/Close";
-import {useDispatch, useSelector}                                         from "react-redux";
-import {getAllQueuesAction, getAllTasksByQueueKey}                        from "../../../../effects/trackerEffect";
-import {TStore}                                                           from "../../../../store/store";
-import CN                                                                 from "classnames";
+                                                                                   from "../../../../components/reduxInformationDialog/index.module.scss";
+import styles2                                                                     from "./fromTracker.module.scss";
+import CloseIcon                                                                   from "@mui/icons-material/Close";
+import {useDispatch, useSelector}                                                  from "react-redux";
+import {
+    getAllQueuesAction,
+    getAllTasksByQueueKey
+}                                                                                  from "../../../../effects/trackerEffect";
+import {TStore}                                                                    from "../../../../store/store";
+import CN                                                                          from "classnames";
 
 interface FromTrackerProps {
 
@@ -27,9 +30,11 @@ const FromTracker: React.FC<FromTrackerProps> = ({}) => {
     }, [isOpen]);
 
     return <div>
-        <div onClick={() => setIsOpen(true)}>
-            <ArchiveIcon/>
-        </div>
+        <Tooltip title="Загрузка задач и проектов из очереди в Трекере">
+            <div onClick={() => setIsOpen(true)}>
+                <ArchiveIcon/>
+            </div>
+        </Tooltip>
         <Dialog
             open={isOpen}
             onClose={() => setIsOpen(false)}
@@ -51,6 +56,7 @@ const FromTracker: React.FC<FromTrackerProps> = ({}) => {
                     }))}
                     onChange={(e, value) => {
                         dispatch(getAllTasksByQueueKey(value?.key as unknown as string));
+                        setIsOpen(false);
                     }}
                     disabled={queues.length == 0}
                     renderInput={(params) => <TextField {...params} label="Очереди"/>}

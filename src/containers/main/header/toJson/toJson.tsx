@@ -1,6 +1,6 @@
-import React, {useState}                         from 'react';
-import {Dialog, DialogContent, TextareaAutosize} from "@mui/material";
-import {setInformationClose}                     from "../../../../slices/modal";
+import React, {useState}                                  from 'react';
+import {Dialog, DialogContent, TextareaAutosize, Tooltip} from "@mui/material";
+import {setInformationClose}                              from "../../../../slices/modal";
 import styles                                    from "../../../../components/reduxInformationDialog/index.module.scss";
 import CloseIcon                                 from "@mui/icons-material/Close";
 import FileUploadIcon                            from '@mui/icons-material/FileUpload';
@@ -17,9 +17,11 @@ const ToJson: React.FC = () => {
     }));
 
     return <div>
-        <div onClick={() => setIsOpen(true)}>
-            <FileUploadIcon/>
-        </div>
+        <Tooltip title="Сохранить json Спринта">
+            <div onClick={() => setIsOpen(true)}>
+                <FileUploadIcon/>
+            </div>
+        </Tooltip>
         <Dialog
             open={isOpen}
             onClose={() => setIsOpen(false)}

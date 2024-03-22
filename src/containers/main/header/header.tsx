@@ -9,6 +9,7 @@ import {PERFORMER_TYPES_ENUM}     from "../../../interfaces/IPerformers";
 import ToJson                     from "./toJson/toJson";
 import FromJson                   from "./fromJson/fromJson";
 import FromTracker                from "./fromTracker/fromTracker";
+import ToggleAllProjects          from "./toggleAllProjects/toggleAllProjects";
 
 interface HeaderProps {
 
@@ -21,6 +22,7 @@ const Header: React.FC<HeaderProps> = () => {
             <ToJson/>
             <FromJson/>
             <FromTracker/>
+            <ToggleAllProjects/>
         </div>
     </div>;
 }
