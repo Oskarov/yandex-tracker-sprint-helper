@@ -35,6 +35,8 @@ const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
         capacity: 1,
         type: TASK_TYPES_ENUM.DEV_TASK,
         component: '',
+        hasEstimate: false,
+        inSomeSprint: false
     }
 
     const dispatch = useDispatch();
@@ -60,6 +62,8 @@ const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
                     capacity: backlogTask.capacity,
                     project: backlogTask.project,
                     component: backlogTask.component,
+                    hasEstimate: false,
+                    inSomeSprint: false,
                 })
             }
         }
@@ -77,7 +81,9 @@ const TaskModalContext: React.FC<TaskModalContextProps> = ({children}) => {
                     number: performerTask.number,
                     capacity: performerTask.capacity,
                     project: performerTask.project,
-                    component: performerTask.component
+                    component: performerTask.component,
+                    hasEstimate: false,
+                    inSomeSprint: false,
                 })
             }
         }

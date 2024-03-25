@@ -6,6 +6,8 @@ export interface ITask {
     type: number,
     project: string,
     component: string,
+    hasEstimate: boolean,
+    inSomeSprint: boolean,
 }
 
 export interface ITasksState {

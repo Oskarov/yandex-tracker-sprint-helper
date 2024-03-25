@@ -124,6 +124,7 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
             <div className={styles.number}><a href={`https://tracker.yandex.ru/${item.number}`}
                                               target={"_blank"} rel={"noreferrer`"}>{item.number}</a></div>
             <div className={styles.name}>
+                <div className={CN(styles.estimation, {[styles.notEstimated]: !item.hasEstimate})}>{item.capacity}</div>
                 <Tooltip title={`[${item.project}] ${item.number} ${item.name} (${item.capacity})`}>
                     <span>{item.name}</span>
                 </Tooltip>

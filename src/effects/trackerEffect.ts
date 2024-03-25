@@ -86,7 +86,9 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                                 project: trackerTask.project?.display || '',
                                 capacity: trackerTask.originalEstimation ? calculateHoursFromTrackerTack(trackerTask.originalEstimation) : task.capacity,
                                 type: CalculateTypeFromTrackerTack(trackerTask.type.key),
-                                component: taskFirstComponent
+                                component: taskFirstComponent,
+                                hasEstimate: !!trackerTask.originalEstimation,
+                                inSomeSprint: true
                             }
                         }))
                     }
@@ -110,7 +112,9 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                         project: trackerTask.project?.display || '',
                         capacity: trackerTask.originalEstimation ? calculateHoursFromTrackerTack(trackerTask.originalEstimation) : 1,
                         type: CalculateTypeFromTrackerTack(trackerTask.type.key),
-                        component: taskFirstComponent
+                        component: taskFirstComponent,
+                        hasEstimate: !!trackerTask.originalEstimation,
+                        inSomeSprint: true
                     }]
                 }
             }

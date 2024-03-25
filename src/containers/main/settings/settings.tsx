@@ -64,23 +64,7 @@ const Settings: React.FC<SettingsProps> = () => {
             modalTitle: "Информация",
             isOpen: true,
             modalText: <div>
-                <ul>
-                    <li>Добавлена возможность редактировать таски</li>
-                    <li>----------------------------------------</li>
-                    <li>Добавлена возможность редактировать исполнителя через контекстное меню</li>
-                    <li>Задачи тим лида не считаются в общей статистике</li>
-                    <li>----------------------------------------</li>
-                    <li>Добавлены роли тимлида и продукт менеджера</li>
-                    <li>Добавлена Общая статистика по спринту в хедере странице (по кнопке с графиком)</li>
-                    <li>Добавлена возможность видеть количество задач в каждом бакете + пояснения при наведении</li>
-                    <li>Добавлена возможность видеть бакет капасити исполнителя</li>
-                    <li>----------------------------------------</li>
-                    <li>Добавлена возможность удалять карточки из контекстного меню</li>
-                    <li>Карточки с одним и тем же номером задачи подсвечиваются, например Бэк и Фронт задачи одной
-                        стори
-                    </li>
-                    <li>Есть возможность сворачивать бэклоги исполнителей по клику на стрелку</li>
-                </ul>
+
             </div>
         }));
     }
@@ -90,7 +74,7 @@ const Settings: React.FC<SettingsProps> = () => {
         <div className={CN(styles.addButton, {[styles.reverse]: open})} onClick={() => setOpen(open => !open)}>
             <SettingsIcon/>
         </div>
-        <div className={styles.version} onClick={versionHandle}>v 1.06</div>
+        <div className={styles.version} onClick={versionHandle}>v 1.0</div>
         <div className={CN(styles.list, {[styles.open]: open})}>
             <div onClick={handleTaskDialogOpen}><span>Настройки</span><DisplaySettingsIcon/></div>
             <div onClick={handleClearBacklog}><span>Очистить беклог продукта</span><CleaningServicesIcon/></div>
