@@ -22,7 +22,7 @@ export const getAllQueuesAction = () => {
                         if (response.data?.length) {
                             result = [...result, ...response.data];
                             if (page < totalPages) {
-                                await getNewResult(page++);
+                                await getNewResult(++page);
                             } else {
                                 dispatch(changeQueues(result));
                             }
@@ -98,10 +98,6 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                 const project = trackerTask.project?.id ? trackerTask.project?.id : '0';
                 let projectTasks = projects[project]?.tasks || [];
                 let projectOpen = projects[project]?.isOpen || true;
-                if (trackerTask.key === 'TMS-196'){
-                    console.log(trackerTask)
-                    console.log( CalculateTypeFromTrackerTack(trackerTask.type.key))
-                }
                 projects[project] = {
                     name: trackerTask.project?.display || 'Без проекта',
                     isOpen: projectOpen,

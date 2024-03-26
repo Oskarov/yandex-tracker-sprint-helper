@@ -1,12 +1,14 @@
 import {createSlice, PayloadAction}                              from '@reduxjs/toolkit';
 import {IPerformerItem, IPerformersState, IPerformerTaskPayload} from "../interfaces/IPerformers";
-import {ITask, ITasksState}                     from "../interfaces/ITask";
-import {IAppState, IConfirmation, IInformation} from "../interfaces/IApp";
+import {ITask, ITasksState}                                      from "../interfaces/ITask";
+import {IAppState, IConfirmation, IInformation}                  from "../interfaces/IApp";
+import {ITrackerQueueImport}                                     from "../interfaces/ITracker";
 
 const initialState: IAppState = {
     rowSize: 60,
     sprintSize: 60,
     valueOfDivision: 20,
+    lastQueue: null
 }
 
 
@@ -33,10 +35,16 @@ const appSlice = createSlice({
             };
         },
         setAppFromJson: (state, {payload}: PayloadAction<IAppState>) => {
-            return{
+            return {
                 ...payload
             }
-        }
+        },
+        setLastQueue: (state, {payload}: PayloadAction<ITrackerQueueImport>) => {
+            return {
+                ...state,
+                lastQueue: payload
+            }
+        },
     }
 })
 
@@ -45,5 +53,6 @@ export const {
     setValueOfDivision,
     setSprintSize,
     setRowSize,
-    setAppFromJson
+    setAppFromJson,
+    setLastQueue
 } = appSlice.actions;

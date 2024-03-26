@@ -27,7 +27,7 @@ const QueueService = {
                     params:
                         {
                             page: !!page ? page : 1,
-                            expand: 'workflow, agile'
+                            expand: 'workflow'
                         }
                 });
 

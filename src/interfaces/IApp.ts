@@ -1,9 +1,11 @@
-import {ReactComponent} from "*.svg";
+import {ReactComponent}      from "*.svg";
+import {ITrackerQueueImport} from "./ITracker";
 
 export interface IAppState {
     rowSize: number,
     sprintSize: number,
     valueOfDivision: number,
+    lastQueue: ITrackerQueueImport | null
 }
 
 export interface IConfirmation {

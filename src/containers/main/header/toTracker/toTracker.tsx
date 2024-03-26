@@ -18,7 +18,7 @@ interface FromTrackerProps {
 
 }
 
-const FromTracker: React.FC<FromTrackerProps> = ({}) => {
+const ToTracker: React.FC<FromTrackerProps> = ({}) => {
     const [isOpen, setIsOpen] = useState(false);
     const {queues} = useSelector((state: TStore) => ({
         queues: state.tracker.queues
@@ -72,4 +72,4 @@ const FromTracker: React.FC<FromTrackerProps> = ({}) => {
     </div>;
 }
 
-export default FromTracker;
+export default ToTracker;
