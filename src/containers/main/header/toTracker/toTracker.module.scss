@@ -1,3 +1,18 @@
 .queueModal {
   height: 600px;
 }
+
+.autoInput{
+  margin-bottom: 16px;
+}
+
+.sprintButtons{
+  padding-top: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  >*{
+    width: 49%;
+  }
+}

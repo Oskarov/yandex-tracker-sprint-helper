@@ -8,22 +8,6 @@ const initialState: ITrackerState = {
     projects: {}
 }
 
-const project = {
-    'alpha': {
-        cost: 0,
-        pay: 1,
-    },
-    'betta': {
-        cost: 0,
-        pay: 1,
-    },
-    gamma: {
-        cost: 0,
-        pay: 1,
-    }
-}
-
-
 const trackerSlice = createSlice({
     name: 'tracker',
     initialState: initialState,

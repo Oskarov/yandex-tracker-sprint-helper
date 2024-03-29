@@ -8,6 +8,7 @@ import FromJson                   from "./fromJson/fromJson";
 import FromTracker                from "./fromTracker/fromTracker";
 import ToggleAllProjects          from "./toggleAllProjects/toggleAllProjects";
 import {getAllTasksByQueueKey}    from "../../../effects/trackerEffect";
+import ToTracker                  from "./toTracker/toTracker";
 
 interface HeaderProps {
 
@@ -26,8 +27,13 @@ const Header: React.FC<HeaderProps> = () => {
         </div>
         {!!lastQueue && <div className={styles.buttons}>
             <div>{lastQueue.name}</div>
-            <RefreshIcon onClick={()=>{dispatch(getAllTasksByQueueKey(lastQueue?.key))}}/>
+            <RefreshIcon onClick={() => {
+                dispatch(getAllTasksByQueueKey(lastQueue?.key))
+            }}/>
         </div>}
+        <div className={styles.buttons}>
+            <ToTracker/>
+        </div>
     </div>;
 }
 

@@ -48,6 +48,24 @@ export interface IProjects {
     }
 }
 
+export interface ITrackerBoard {
+    id: number,
+    version: number,
+    name: string,
+}
+
+export interface ITrackerSprint {
+    id: number,
+    version: number,
+    name: string,
+    status: string,
+    archived: string,
+    createdBy: {
+        id: number,
+        display: string
+    }
+}
+
 export interface ITrackerHeaders {
     "X-Total-Count": number
     "x-total-pages": number
@@ -56,4 +74,9 @@ export interface ITrackerHeaders {
 export interface ITrackerState {
     queues: ITrackerQueueImport[],
     projects: IProjects
+}
+
+export interface ITrackerNoMemoState {
+    boards: ITrackerBoard[],
+    sprints: ITrackerSprint[]
 }

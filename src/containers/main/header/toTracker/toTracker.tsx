@@ -3,16 +3,20 @@ import ArchiveIcon                                                              
 import {Autocomplete, Dialog, DialogContent, TextareaAutosize, TextField, Tooltip} from "@mui/material";
 import styles
                                                                                    from "../../../../components/reduxInformationDialog/index.module.scss";
-import styles2                                                                     from "./fromTracker.module.scss";
-import CloseIcon                                                                   from "@mui/icons-material/Close";
-import {useDispatch, useSelector}                                                  from "react-redux";
+import styles2                                                                     from "./toTracker.module.scss";
+import CloseIcon                  from "@mui/icons-material/Close";
+import {useDispatch, useSelector} from "react-redux";
 import {
-    getAllQueuesAction,
-    getAllTasksByQueueKey
-}                                                                                  from "../../../../effects/trackerEffect";
-import {TStore}                                                                    from "../../../../store/store";
-import CN                                                                          from "classnames";
-import {setLastQueue}                                                              from "../../../../slices/app";
+    getAllBoardsAction,
+    getAllQueuesAction, getAllSprintsByBoardId,
+    getAllTasksByQueueKey, getAllTasksBySprintId
+} from "../../../../effects/trackerEffect";
+import {TStore}                   from "../../../../store/store";
+import CN                         from "classnames";
+import CloudUploadIcon
+                                  from '@mui/icons-material/CloudUpload';
+import Button                     from "@mui/material/Button";
+import {clearTargetTask}          from "../../../../slices/modal";
 
 interface FromTrackerProps {
 
@@ -20,20 +24,40 @@ interface FromTrackerProps {
 
 const ToTracker: React.FC<FromTrackerProps> = ({}) => {
     const [isOpen, setIsOpen] = useState(false);
-    const {queues} = useSelector((state: TStore) => ({
-        queues: state.tracker.queues
+    const [chosenSprint, setChosenSprint] = useState<number | null>(null)
+    const {boards, sprints} = useSelector((state: TStore) => ({
+        boards: state.trackerNoMemo.boards,
+        sprints: state.trackerNoMemo.sprints
     }));
+    const newBoardsIds: number[] = []
+    const newBoards = boards.filter((board) => {
+        if (!newBoardsIds.includes(board.id)) {
+            newBoardsIds.push(board.id);
+            return true;
+        }
+        return false;
+    });
     const dispatch = useDispatch();
     useEffect(() => {
         if (isOpen) {
-            dispatch(getAllQueuesAction());
+            dispatch(getAllBoardsAction());
         }
     }, [isOpen]);
 
+    const handleClear = () => {
+        if (chosenSprint){
+            dispatch(getAllTasksBySprintId(chosenSprint, true))
+        }
+    }
+
+    const handleChange = () => {
+
+    }
+
     return <div>
-        <Tooltip title="Загрузка задач и проектов из очереди в Трекере">
+        <Tooltip title="Выгрузка задач в спринт трекера">
             <div onClick={() => setIsOpen(true)}>
-                <ArchiveIcon/>
+                <CloudUploadIcon/>
             </div>
         </Tooltip>
         <Dialog
@@ -47,25 +71,43 @@ const ToTracker: React.FC<FromTrackerProps> = ({}) => {
                 <div className={styles.roundButton} onClick={() => setIsOpen(false)}>
                     <CloseIcon/>
                 </div>
-                <div className={styles.title}>Загрузка из очереди</div>
+                <div className={styles.title}>Выгрузка задач в трекер</div>
                 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    options={queues.map(i => ({
-                        label: `${i.name}(${i.key})`,
-                        key: i.key
+                    className={styles2.autoInput}
+                    options={newBoards.map(i => ({
+                        label: `${i.name} (${i.id})`,
+                        key: i.id
                     }))}
                     onChange={(e, value) => {
-                        dispatch(getAllTasksByQueueKey(value?.key as unknown as string));
-                        const queue = queues.find(i => i.key === value?.key);
-                        if (queue) {
-                            dispatch(setLastQueue(queue));
+                        if (value?.key) {
+                            dispatch(getAllSprintsByBoardId(value?.key));
                         }
-                        setIsOpen(false);
                     }}
-                    disabled={queues.length == 0}
-                    renderInput={(params) => <TextField {...params} label="Очереди"/>}
+                    disabled={newBoards.length == 0}
+                    renderInput={(params) => <TextField {...params} label="Доски"/>}
                 />
+                <Autocomplete
+                    disablePortal
+                    id="sprint-change"
+                    options={sprints.map(i => ({
+                        label: `${i.name} (${i.id})`,
+                        key: i.id
+                    }))}
+                    onChange={(e, value) => {
+                        if (value?.key) {
+                            setChosenSprint(value.key);
+                        }
+                    }}
+                    disabled={sprints.length == 0}
+                    renderInput={(params) => <TextField {...params} label="Спринты"/>}
+                />
+
+                {!!chosenSprint && <div className={styles2.sprintButtons}>
+                    <Button onClick={handleClear} color={'secondary'} variant={'outlined'}>Очистить</Button>
+                    <Button onClick={handleChange} color={'primary'} variant={'contained'}>Отправить</Button>
+                </div>}
 
             </DialogContent>
         </Dialog>
