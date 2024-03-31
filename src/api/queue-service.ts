@@ -73,6 +73,20 @@ const QueueService = {
             }
         }
     },
+    getTaskByKey: async (key: string): Promise<{ success: boolean, data?: ITrackerQueueTask }> => {
+        try {
+            const {data} = await httpClient.get(`/issues/${key}`);
+
+            return {
+                success: true,
+                data: data,
+            }
+        } catch (e) {
+            return {
+                success: false
+            }
+        }
+    },
     getAllBoards: async (page?: number): Promise<{ success: boolean, data?: ITrackerBoard[], headers?: ITrackerHeaders }> => {
         try {
             const {status, data, headers} = await httpClient.get(`/boards/`, {params: {page: !!page ? page : 1}});
@@ -90,7 +104,11 @@ const QueueService = {
     },
     getAllSprintsByBoardId: async (boardId: number, page?: number): Promise<{ success: boolean, data?: ITrackerSprint[], headers?: ITrackerHeaders }> => {
         try {
-            const {status, data, headers} = await httpClient.get(`/boards/${boardId}/sprints`, {params: {page: !!page ? page : 1}});
+            const {
+                status,
+                data,
+                headers
+            } = await httpClient.get(`/boards/${boardId}/sprints`, {params: {page: !!page ? page : 1}});
 
             return {
                 success: true,
@@ -107,8 +125,11 @@ const QueueService = {
         try {
             const {status, data, headers} = await httpClient.patch(`/issues/${key}`,
                 {
-                 /*   sprint: !!sprintId ? `[{"id":"${sprintId}"}]` : null*/
-                    sprint: {"add":!!sprintToAdd ? [sprintToAdd] : [],"remove": !!sprintToRemove ? [sprintToRemove] : []}
+                    /*   sprint: !!sprintId ? `[{"id":"${sprintId}"}]` : null*/
+                    sprint: {
+                        "add": !!sprintToAdd ? [sprintToAdd] : [],
+                        "remove": !!sprintToRemove ? [sprintToRemove] : []
+                    }
                 },);
 
             return {

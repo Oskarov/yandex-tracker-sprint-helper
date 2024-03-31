@@ -1,17 +1,18 @@
 import {createSlice, PayloadAction}                              from '@reduxjs/toolkit';
 import {IPerformerItem, IPerformersState, IPerformerTaskPayload} from "../interfaces/IPerformers";
-import {ITask}                                                              from "../interfaces/ITask";
+import {ITask}                                                   from "../interfaces/ITask";
 import {
     IProjects,
     ITrackerBoard,
     ITrackerNoMemoState,
     ITrackerQueueImport, ITrackerSprint,
-    ITrackerState
-} from "../interfaces/ITracker";
+    ITrackerState, ITrackerUser
+}                                                                from "../interfaces/ITracker";
 
-const initialState: ITrackerNoMemoState= {
+const initialState: ITrackerNoMemoState = {
     boards: [],
-    sprints: []
+    sprints: [],
+    users: [],
 }
 
 const trackerNoMemoSlice = createSlice({
@@ -30,6 +31,12 @@ const trackerNoMemoSlice = createSlice({
                 sprints: payload
             };
         },
+        changeUsers: (state, {payload}: PayloadAction<ITrackerUser[]>) => {
+            return {
+                ...state,
+                users: payload
+            };
+        },
 
     }
 })
@@ -37,5 +44,6 @@ const trackerNoMemoSlice = createSlice({
 export const trackerNoMemoReducer = trackerNoMemoSlice.reducer;
 export const {
     changeBoards,
-    changeSprints
+    changeSprints,
+    changeUsers
 } = trackerNoMemoSlice.actions;

@@ -37,7 +37,11 @@ export interface ITrackerQueueTask {
         id: string,
         display: string
     },
-    originalEstimation?: string
+    originalEstimation?: string,
+    assignee?: {
+        id: number,
+        display: string
+    }
 }
 
 export interface IProjects {
@@ -66,6 +70,17 @@ export interface ITrackerSprint {
     }
 }
 
+export interface ITrackerUser {
+    uid: number,
+    login: string,
+    trackerUid: number,
+    passportUid: number,
+    firstName: string,
+    lastName: string,
+    display: string,
+    email: string,
+}
+
 export interface ITrackerHeaders {
     "X-Total-Count": number
     "x-total-pages": number
@@ -78,5 +93,6 @@ export interface ITrackerState {
 
 export interface ITrackerNoMemoState {
     boards: ITrackerBoard[],
-    sprints: ITrackerSprint[]
+    sprints: ITrackerSprint[],
+    users: ITrackerUser[]
 }

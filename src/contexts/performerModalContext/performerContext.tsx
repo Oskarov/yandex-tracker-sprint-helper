@@ -1,4 +1,4 @@
-import React, {createContext, useState}                   from 'react';
+import React, {createContext, useEffect, useState}        from 'react';
 import DialogTitle                                        from "@mui/material/DialogTitle";
 import DialogContent                                      from "@mui/material/DialogContent";
 import DialogContentText                                  from "@mui/material/DialogContentText";
@@ -7,11 +7,15 @@ import {performerTypes}                                   from "../../interfaces
 import TextField                                          from "@mui/material/TextField";
 import DialogActions                                      from "@mui/material/DialogActions";
 import Button                                             from "@mui/material/Button";
-import Dialog                        from "@mui/material/Dialog";
-import {addPerformer, editPerformer} from "../../slices/performers";
-import {generateRandomString}        from "../../utils/generateRandomString";
+import Dialog                                             from "@mui/material/Dialog";
+import {addPerformer, editPerformer}                      from "../../slices/performers";
+import {generateRandomString}                             from "../../utils/generateRandomString";
 import {useDispatch}                                      from "react-redux";
 import {store}                                            from "../../store/store";
+import {getAllUsersAction}                                from "../../effects/trackerEffect";
+import QueueService                                       from "../../api/queue-service";
+import {inspect}                                          from "util";
+import styles                                             from './performerContext.module.scss'
 
 interface ReduxContextProps {
     children: any
@@ -23,19 +27,41 @@ export interface IModalContextData {
 
 export const PerformerModalContextChanger = createContext<((data: IModalContextData) => void) | null>(null);
 
+interface IInitial {
+    firstName: string,
+    lastName: string,
+    roleId: number,
+    trackerId: number | undefined,
+    trackerDisplay: string | undefined,
+}
+
 const PerformerModalContext: React.FC<ReduxContextProps> = ({children}) => {
     const dispatch = useDispatch();
 
-    const initialData = {
+    const initialData: IInitial = {
         firstName: '',
         lastName: '',
         roleId: 10,
+        trackerId: undefined,
+        trackerDisplay: undefined
     }
 
     const [createTaskDialogOpen, setCreateTaskDialogOpen] = useState(false);
-    const [data, setData] = useState(initialData);
+    const [taskKey, setTaskKey] = useState('');
+    const [data, setData] = useState<IInitial>(initialData);
     const [currentId, setCurrenId] = useState<string | null>(null);
 
+    const getUserInfo = async () => {
+        const {success, data} = await QueueService.getTaskByKey(taskKey);
+        console.log(data?.assignee);
+        if (success && data) {
+            if (data.assignee && data.assignee.id && data.assignee.display) {
+                handleTaskDataChange('trackerId', data.assignee.id);
+                handleTaskDataChange('trackerDisplay', data.assignee.display);
+            }
+
+        }
+    }
 
     const handleTaskDialogOpen = () => {
         setCreateTaskDialogOpen(true);
@@ -93,7 +119,9 @@ const PerformerModalContext: React.FC<ReduxContextProps> = ({children}) => {
                 setData({
                     lastName: performer.lastName,
                     firstName: performer.firstName,
-                    roleId: performer.roleId
+                    roleId: performer.roleId,
+                    trackerId: performer.trackerId,
+                    trackerDisplay: performer.trackerDisplay
                 })
                 setCurrenId(performer.uuid);
             } else {
@@ -153,6 +181,26 @@ const PerformerModalContext: React.FC<ReduxContextProps> = ({children}) => {
                     }}
                     variant="standard"
                 />
+                <div className={styles.getTask}>
+                    <TextField
+                        margin="dense"
+                        id="find"
+                        label="Подгрузить информацию по пользователю из задачи"
+                        type="text"
+                        fullWidth
+                        value={taskKey}
+                        onChange={(e) => {
+                            setTaskKey(e.target.value);
+                        }}
+                        placeholder={'TMS-222'}
+                        variant="standard"
+                    />
+                    <Button onClick={getUserInfo}>Получить</Button>
+                </div>
+                {(data.trackerId && data.trackerDisplay) && <div className={styles.trackerInfo}>
+                    <div>Информация из трекера:</div>
+                    <div>{data.trackerDisplay} ({data.trackerId})</div>
+                </div>}
 
             </DialogContent>
             <DialogActions>

@@ -1,13 +1,14 @@
-import {Dispatch}                           from 'redux';
-import {addPerformer, editTaskForPerformer} from "../slices/performers";
-import {generateRandomString}               from "../utils/generateRandomString";
-import QueueService                         from "../api/queue-service";
-import {changeProjects, changeQueues}       from "../slices/tracker";
-import {IProjects, ITrackerQueueTask}       from "../interfaces/ITracker";
-import {store}                              from "../store/store";
-import calculateHoursFromTrackerTack        from "../utils/calculateHoursFromTrackerTack";
-import CalculateTypeFromTrackerTack  from "../utils/calculateTypeFromTrackerTack";
-import {changeBoards, changeSprints} from "../slices/trackerNoMemo";
+import {Dispatch}                                 from 'redux';
+import {addPerformer, editTaskForPerformer}       from "../slices/performers";
+import {generateRandomString}                     from "../utils/generateRandomString";
+import QueueService                               from "../api/queue-service";
+import {changeProjects, changeQueues}             from "../slices/tracker";
+import {IProjects, ITrackerQueueTask}             from "../interfaces/ITracker";
+import {store}                                    from "../store/store";
+import calculateHoursFromTrackerTack              from "../utils/calculateHoursFromTrackerTack";
+import CalculateTypeFromTrackerTack               from "../utils/calculateTypeFromTrackerTack";
+import {changeBoards, changeSprints, changeUsers} from "../slices/trackerNoMemo";
+import SprintService                              from "../api/sprint-service";
 
 export const getAllQueuesAction = () => {
     return async function (dispatch: Dispatch<any>) {
@@ -112,7 +113,7 @@ export const getAllTasksBySprintId = (id: number, forRemove: boolean) => {
                             if (page < totalPages) {
                                 await getNewResult(++page);
                             } else {
-                                if (forRemove){
+                                if (forRemove) {
                                     dispatch(removeSprintFromTasks(result, id));
                                 }
                             }
@@ -121,7 +122,7 @@ export const getAllTasksBySprintId = (id: number, forRemove: boolean) => {
                 }
                 await getNewResult(2);
             } else {
-                if (forRemove){
+                if (forRemove) {
                     dispatch(removeSprintFromTasks(result, id));
                 }
             }
@@ -129,16 +130,15 @@ export const getAllTasksBySprintId = (id: number, forRemove: boolean) => {
     }
 }
 
-export const removeSprintFromTasks = (tasks:ITrackerQueueTask[], sprintToRemoveId:number) => {
+export const removeSprintFromTasks = (tasks: ITrackerQueueTask[], sprintToRemoveId: number) => {
     return async function (dispatch: Dispatch<any>) {
-        tasks.forEach((task, idx)=>{
-            setTimeout(async ()=>{
+        tasks.forEach((task, idx) => {
+            setTimeout(async () => {
                 const response = await QueueService.changeTaskSprint(task.id, null, sprintToRemoveId);
-            }, 1000 * idx+1)
+            }, 1000 * idx + 1)
         })
     }
 }
-
 
 
 export const getAllSprintsByBoardId = (id: number) => {
@@ -220,5 +220,33 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
             }
         });
         dispatch(changeProjects(projects));
+    }
+}
+
+export const getAllUsersAction = () => {
+    return async function (dispatch: Dispatch<any>) {
+        const response = await SprintService.getAllUsers();
+        if (response.success && response.data) {
+            let result = [...response.data];
+            if (response.headers && response.headers["x-total-pages"] > 1) {
+                const totalPages = response.headers["x-total-pages"];
+                const getNewResult = async (page: number) => {
+                    setTimeout(async () => {
+                        const response = await SprintService.getAllUsers(page);
+                        if (response.data?.length) {
+                            result = [...result, ...response.data];
+                            if (page < totalPages) {
+                                await getNewResult(++page);
+                            } else {
+                                dispatch(changeUsers(result));
+                            }
+                        }
+                    }, 1000);
+                }
+                await getNewResult(2);
+            } else {
+                dispatch(changeUsers(result));
+            }
+        }
     }
 }

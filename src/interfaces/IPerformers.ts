@@ -9,8 +9,11 @@ export interface IPerformerItem {
     firstName: string,
     lastName: string,
     roleId: number,
-    tasks: ITask[]
+    tasks: ITask[],
+    trackerId?: number,
+    trackerDisplay?: string,
 }
+
 export interface IPerformerTaskPayload {
     performerUuid: string,
     task: ITask,
