@@ -8,7 +8,8 @@ const initialState: IAppState = {
     rowSize: 60,
     sprintSize: 60,
     valueOfDivision: 20,
-    lastQueue: null
+    lastQueue: null,
+    loadingText: '',
 }
 
 
@@ -45,6 +46,12 @@ const appSlice = createSlice({
                 lastQueue: payload
             }
         },
+        setLoading: (state, {payload}: PayloadAction<string>) => {
+            return {
+                ...state,
+                loadingText: payload
+            }
+        },
     }
 })
 
@@ -54,5 +61,6 @@ export const {
     setSprintSize,
     setRowSize,
     setAppFromJson,
-    setLastQueue
+    setLastQueue,
+    setLoading
 } = appSlice.actions;

@@ -121,8 +121,13 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
         </div>}
         {![TASK_TYPES_ENUM.MEETINGS, TASK_TYPES_ENUM.REVIEW, TASK_TYPES_ENUM.VACATION, TASK_TYPES_ENUM.HOLLYDAYS].includes(item.type) &&
         <div>
-            <div className={styles.number}><a href={`https://tracker.yandex.ru/${item.number}`}
-                                              target={"_blank"} rel={"noreferrer`"}>{item.number}</a></div>
+            <div className={styles.number}>
+                <a href={`https://tracker.yandex.ru/${item.number}`}
+                                              target={"_blank"} rel={"noreferrer`"}>{item.number}</a>
+                <Tooltip title={item.inSprintDisplay || 'без спринта'}>
+                    <div className={CN(styles.sprint, {[styles.noSprint]: !item.inSomeSprint})}/>
+                </Tooltip>
+            </div>
             <div className={styles.name}>
                 <div className={CN(styles.estimation, {[styles.notEstimated]: !item.hasEstimate})}>{item.capacity}</div>
                 <Tooltip title={`[${item.project}] ${item.number} ${item.name} (${item.capacity})`}>

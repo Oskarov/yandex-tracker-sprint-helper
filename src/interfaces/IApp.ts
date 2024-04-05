@@ -6,6 +6,7 @@ export interface IAppState {
     sprintSize: number,
     valueOfDivision: number,
     lastQueue: ITrackerQueueImport | null
+    loadingText: string
 }
 
 export interface IConfirmation {

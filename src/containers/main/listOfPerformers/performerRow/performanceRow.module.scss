@@ -13,7 +13,7 @@
     margin-top: 8px;
     margin-bottom: 8px;
 
-    .left{
+    .left {
       display: flex;
       align-items: center;
       justify-content: flex-start;
@@ -23,7 +23,7 @@
         font-weight: 700;
       }
 
-      .icon{
+      .icon {
         margin-right: 8px;
         display: flex;
         align-items: center;
@@ -35,15 +35,22 @@
   }
 }
 
-.task{
+.task {
   border: 3px solid rgba(0, 157, 255, 0.32);
   border-radius: 8px;
   position: relative;
 
-  .number{
+  .number {
     position: absolute;
     left: 3px;
     top: 3px;
     font-size: 10px
   }
+}
+
+.verified {
+  margin-left: 8px;
+  width: 20px;
+  height: 20px;
+  color: rgba(53, 160, 0, 0.62);
 }

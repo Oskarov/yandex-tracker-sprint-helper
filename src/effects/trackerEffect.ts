@@ -9,6 +9,7 @@ import calculateHoursFromTrackerTack              from "../utils/calculateHoursF
 import CalculateTypeFromTrackerTack               from "../utils/calculateTypeFromTrackerTack";
 import {changeBoards, changeSprints, changeUsers} from "../slices/trackerNoMemo";
 import SprintService                              from "../api/sprint-service";
+import {setLoading}                               from "../slices/app";
 
 export const getAllQueuesAction = () => {
     return async function (dispatch: Dispatch<any>) {
@@ -70,6 +71,7 @@ export const getAllBoardsAction = () => {
 
 export const getAllTasksByQueueKey = (queueKey: string) => {
     return async function (dispatch: Dispatch<any>) {
+        dispatch(setLoading('Загрузка очереди'));
         const response = await QueueService.getAllTasksByQueue(queueKey);
         if (response.success && response.data) {
             let result = [...response.data];
@@ -77,6 +79,7 @@ export const getAllTasksByQueueKey = (queueKey: string) => {
             if (response.headers && response.headers["x-total-pages"] > 1) {
                 const totalPages = response.headers["x-total-pages"];
                 const getNewResult = async (page: number) => {
+                    dispatch(setLoading(`Загрузка очереди. Страница ${page} из ${totalPages}`));
                     setTimeout(async () => {
                         const response = await QueueService.getAllTasksByQueue(queueKey, page);
                         if (response.data?.length) {
@@ -85,6 +88,7 @@ export const getAllTasksByQueueKey = (queueKey: string) => {
                                 await getNewResult(++page);
                             } else {
                                 dispatch(setTasksFromTracker(result));
+                                dispatch(setLoading(''));
                             }
                         }
                     }, 1000);
@@ -92,20 +96,22 @@ export const getAllTasksByQueueKey = (queueKey: string) => {
                 await getNewResult(2);
             } else {
                 dispatch(setTasksFromTracker(result));
+                dispatch(setLoading(''));
             }
         }
     }
 }
 
-export const getAllTasksBySprintId = (id: number, forRemove: boolean) => {
+export const getAllTasksBySprintId = (id: number, forRemove: boolean, startUploading: boolean) => {
     return async function (dispatch: Dispatch<any>) {
+        dispatch(setLoading(`Загрузка спринта, получение задач.`));
         const response = await QueueService.getAllTasksBySprint(id);
         if (response.success && response.data) {
             let result = [...response.data];
-
             if (response.headers && response.headers["x-total-pages"] > 1) {
                 const totalPages = response.headers["x-total-pages"];
                 const getNewResult = async (page: number) => {
+                    dispatch(setLoading(`Загрузка спринта. Страница задач ${page} из ${totalPages}`));
                     setTimeout(async () => {
                         const response = await QueueService.getAllTasksBySprint(id, page);
                         if (response.data?.length) {
@@ -114,7 +120,9 @@ export const getAllTasksBySprintId = (id: number, forRemove: boolean) => {
                                 await getNewResult(++page);
                             } else {
                                 if (forRemove) {
-                                    dispatch(removeSprintFromTasks(result, id));
+                                    dispatch(removeSprintFromTasks(result, id, true));
+                                } else {
+                                    dispatch(setLoading(``));
                                 }
                             }
                         }
@@ -123,20 +131,78 @@ export const getAllTasksBySprintId = (id: number, forRemove: boolean) => {
                 await getNewResult(2);
             } else {
                 if (forRemove) {
-                    dispatch(removeSprintFromTasks(result, id));
+                    dispatch(removeSprintFromTasks(result, id, true));
+                } else {
+                    dispatch(setLoading(``));
                 }
             }
         }
     }
 }
 
-export const removeSprintFromTasks = (tasks: ITrackerQueueTask[], sprintToRemoveId: number) => {
+export const removeSprintFromTasks = (tasks: ITrackerQueueTask[], sprintToRemoveId: number, startUploading: boolean) => {
     return async function (dispatch: Dispatch<any>) {
+        let tasksCount = tasks.length;
         tasks.forEach((task, idx) => {
             setTimeout(async () => {
+                dispatch(setLoading(`Очистка спринта. Осталось задач ${tasksCount}`));
                 const response = await QueueService.changeTaskSprint(task.id, null, sprintToRemoveId);
             }, 1000 * idx + 1)
+        });
+
+        setTimeout(() => {
+            if (startUploading) {
+                dispatch(uploadSprint(sprintToRemoveId));
+            } else {
+                dispatch(setLoading(``));
+            }
+
+        }, 1000 * tasks.length + 5);
+    }
+}
+
+interface IUploadingTask {
+    taskNumber: string,
+    performerDisplay: string,
+    performerId: number,
+    taskId: string
+}
+
+export const uploadSprint = (sprintId: number) => {
+    return async function (dispatch: Dispatch<any>) {
+        dispatch(setLoading(`Загрузка спринта`));
+        let performers = store.getState().performers.items;
+        let tasks: IUploadingTask[] = [];
+        if (!!performers.length) {
+            performers.forEach(performer => {
+                performer.tasks.forEach(task => {
+                    if (task.trackerId && performer.trackerDisplay && performer.trackerId) {
+                        tasks.push({
+                            taskNumber: task.number,
+                            performerDisplay: performer.trackerDisplay,
+                            performerId: performer.trackerId,
+                            taskId: task.trackerId
+                        })
+                    }
+                })
+            })
+        }
+
+        let tasksCount = tasks.length;
+        tasks.forEach((task, idx) => {
+            setTimeout(async () => {
+                dispatch(setLoading(`Осталось выгрузить задач: ${tasksCount - idx}`));
+                const response = await SprintService.setTaskForTracker(task.performerId, task.taskId, sprintId);
+                if (!response) {
+                    console.log('bad');
+                }
+                if (idx + 1 >= tasksCount) {
+                    dispatch(setLoading(``));
+                }
+            }, 1000 * idx + 1);
         })
+
+        dispatch(setLoading(``));
     }
 }
 
@@ -186,13 +252,16 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                             task: {
                                 uuid: task.uuid,
                                 number: task.number,
+                                trackerId: trackerTask.id,
                                 name: trackerTask.summary,
                                 project: trackerTask.project?.display || '',
                                 capacity: trackerTask.originalEstimation ? calculateHoursFromTrackerTack(trackerTask.originalEstimation) : task.capacity,
                                 type: CalculateTypeFromTrackerTack(trackerTask.type.key),
                                 component: taskFirstComponent,
                                 hasEstimate: !!trackerTask.originalEstimation,
-                                inSomeSprint: true
+                                inSomeSprint: !!trackerTask.sprint && !!trackerTask.sprint.length,
+                                inSprintDisplay: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].display : '',
+                                inSprintId: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].id : ''
                             }
                         }))
                     }
@@ -214,7 +283,9 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                         type: CalculateTypeFromTrackerTack(trackerTask.type.key),
                         component: taskFirstComponent,
                         hasEstimate: !!trackerTask.originalEstimation,
-                        inSomeSprint: true
+                        inSomeSprint: !!trackerTask.sprint && !!trackerTask.sprint.length,
+                        inSprintDisplay: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].display : '',
+                        inSprintId: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].id : ''
                     }]
                 }
             }

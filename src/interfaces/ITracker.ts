@@ -42,6 +42,10 @@ export interface ITrackerQueueTask {
         id: number,
         display: string
     }
+    sprint: {
+      display:string,
+      id: string,
+    }[]
 }
 
 export interface IProjects {

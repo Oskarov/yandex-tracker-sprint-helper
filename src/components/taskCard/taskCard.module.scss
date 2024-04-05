@@ -7,6 +7,9 @@
   margin-bottom: 8px;
 
   .number {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     position: absolute;
     left: 3px;
     top: 3px;
@@ -90,5 +93,17 @@
   &.notEstimated {
     background: #8f0303;
     color: white;
+  }
+}
+
+.sprint{
+  margin-left: 8px;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background: green;
+
+  &.noSprint{
+    background: red;
   }
 }

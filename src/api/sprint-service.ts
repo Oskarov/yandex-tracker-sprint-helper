@@ -17,6 +17,28 @@ const SprintService = {
             }
         }
     },
+    setTaskForTracker: async ( performerId: number, taskId: string, sprintId: number): Promise<{ success: boolean }> => {
+        try {
+            const {status, data, headers} = await httpClient.patch(`/issues/${taskId}`,
+                {
+                    sprint: {
+                        "add": [sprintId]
+                    },
+                    assignee: performerId
+                },);
 
+            return {
+                success: true
+            }
+        } catch (e) {
+            return {
+                success: false
+            }
+        }
+    },
 }
+
+
+
+
 export default SprintService;

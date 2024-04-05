@@ -1,5 +1,6 @@
 export interface ITask {
     uuid: string,
+    trackerId?: string
     name: string,
     number: string,
     capacity: number,
@@ -8,6 +9,8 @@ export interface ITask {
     component: string,
     hasEstimate: boolean,
     inSomeSprint: boolean,
+    inSprintDisplay?: string,
+    inSprintId?: string
 }
 
 export interface ITasksState {

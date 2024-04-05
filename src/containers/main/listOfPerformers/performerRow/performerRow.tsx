@@ -18,6 +18,8 @@ import KeyboardArrowDownIcon                  from '@mui/icons-material/Keyboard
 import ManageAccountsIcon                     from '@mui/icons-material/ManageAccounts';
 import GamesIcon                              from '@mui/icons-material/Games';
 import PerformerMenu                          from "./menu/menu";
+import VerifiedUserIcon                       from '@mui/icons-material/VerifiedUser';
+import {Tooltip}                              from "@mui/material";
 
 interface PerformerRowProps {
     performer: IPerformerItem
@@ -69,6 +71,10 @@ const PerformerRow: React.FC<PerformerRowProps> = ({performer}) => {
                     {performer.roleId === PERFORMER_TYPES_ENUM.ANALYTICS && <AnalyticsIcon/>}
                 </div>
                 <div className={styles.name}>{`${performer.lastName} ${performer.firstName}`}</div>
+                {performer.trackerId &&
+                <Tooltip title={`Пользователь трекера: ${performer.trackerDisplay}(${performer.trackerId})`}>
+                    <VerifiedUserIcon className={styles.verified}/>
+                </Tooltip>}
                 <Metrics performer={performer}/>
                 <div className={CN(styles.icon, {[styles.close]: !open})} onClick={() => setOpen(open => !open)}>
                     <KeyboardArrowDownIcon/>

@@ -4,19 +4,19 @@ import {Autocomplete, Dialog, DialogContent, TextareaAutosize, TextField, Toolti
 import styles
                                                                                    from "../../../../components/reduxInformationDialog/index.module.scss";
 import styles2                                                                     from "./toTracker.module.scss";
-import CloseIcon                  from "@mui/icons-material/Close";
-import {useDispatch, useSelector} from "react-redux";
+import CloseIcon                                                                   from "@mui/icons-material/Close";
+import {useDispatch, useSelector}                                                  from "react-redux";
 import {
     getAllBoardsAction,
     getAllQueuesAction, getAllSprintsByBoardId,
     getAllTasksByQueueKey, getAllTasksBySprintId
-} from "../../../../effects/trackerEffect";
-import {TStore}                   from "../../../../store/store";
-import CN                         from "classnames";
+}                                                                                  from "../../../../effects/trackerEffect";
+import {TStore}                                                                    from "../../../../store/store";
+import CN                                                                          from "classnames";
 import CloudUploadIcon
-                                  from '@mui/icons-material/CloudUpload';
-import Button                     from "@mui/material/Button";
-import {clearTargetTask}          from "../../../../slices/modal";
+                                                                                   from '@mui/icons-material/CloudUpload';
+import Button                                                                      from "@mui/material/Button";
+import {clearTargetTask}                                                           from "../../../../slices/modal";
 
 interface FromTrackerProps {
 
@@ -44,14 +44,10 @@ const ToTracker: React.FC<FromTrackerProps> = ({}) => {
         }
     }, [isOpen]);
 
-    const handleClear = () => {
-        if (chosenSprint){
-            dispatch(getAllTasksBySprintId(chosenSprint, true))
-        }
-    }
-
     const handleChange = () => {
-
+        if (chosenSprint) {
+            dispatch(getAllTasksBySprintId(chosenSprint, true, true))
+        }
     }
 
     return <div>
@@ -105,7 +101,6 @@ const ToTracker: React.FC<FromTrackerProps> = ({}) => {
                 />
 
                 {!!chosenSprint && <div className={styles2.sprintButtons}>
-                    <Button onClick={handleClear} color={'secondary'} variant={'outlined'}>Очистить</Button>
                     <Button onClick={handleChange} color={'primary'} variant={'contained'}>Отправить</Button>
                 </div>}
 
