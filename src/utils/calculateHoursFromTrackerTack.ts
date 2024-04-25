@@ -19,7 +19,7 @@ const CalculateHoursFromTrackerTask = (str: string): number => {
         }
     }
 
-    return weeks * 7 * 24 + days * 24 + hours + minutes / 60;
+    return weeks * 7 * 8 + days * 8 + hours + minutes / 60;
 }
 
 export default CalculateHoursFromTrackerTask;
