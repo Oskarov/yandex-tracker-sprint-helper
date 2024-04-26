@@ -37,6 +37,7 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
         app: state.app,
         targetTask: state.modal.targetTask
     }));
+    const taskLighting = useSelector((state: TStore) => state.app.taskLighting);
     const dispatch = useDispatch();
 
     const [contextMenu, setContextMenu] = React.useState<{
@@ -65,7 +66,7 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
         ? item.capacity
         : item.capacity > 10
             ? item.capacity
-            : 10;
+            : taskLighting ? 10 : item.capacity;
 
     return <div
         onMouseOver={(e) => {
@@ -85,7 +86,7 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
             app.valueOfDivision
         )}
         className={CN(styles.task, {
-            [styles.targetTask]: (targetTask === item.number) && ![TASK_TYPES_ENUM.MEETINGS, TASK_TYPES_ENUM.REVIEW, TASK_TYPES_ENUM.VACATION, TASK_TYPES_ENUM.HOLLYDAYS].includes(item.type),
+            [styles.targetTask]: taskLighting && (targetTask === item.number) && ![TASK_TYPES_ENUM.MEETINGS, TASK_TYPES_ENUM.REVIEW, TASK_TYPES_ENUM.VACATION, TASK_TYPES_ENUM.HOLLYDAYS].includes(item.type),
             [styles.onDraw]: snapshot.isDragging,
             [styles.review]: item.type === TASK_TYPES_ENUM.REVIEW,
             [styles.meetings]: item.type === TASK_TYPES_ENUM.MEETINGS,
@@ -123,7 +124,7 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
         <div>
             <div className={styles.number}>
                 <a href={`https://tracker.yandex.ru/${item.number}`}
-                                              target={"_blank"} rel={"noreferrer`"}>{item.number}</a>
+                   target={"_blank"} rel={"noreferrer`"}>{item.number}</a>
                 <Tooltip title={item.inSprintDisplay || 'без спринта'}>
                     <div className={CN(styles.sprint, {[styles.noSprint]: !item.inSomeSprint})}/>
                 </Tooltip>

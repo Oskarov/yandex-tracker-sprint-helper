@@ -10,6 +10,7 @@ const initialState: IAppState = {
     valueOfDivision: 20,
     lastQueue: null,
     loadingText: '',
+    taskLighting: true
 }
 
 
@@ -52,6 +53,12 @@ const appSlice = createSlice({
                 loadingText: payload
             }
         },
+        setTaskLighting: (state, {payload}: PayloadAction<boolean>) => {
+            return {
+                ...state,
+                taskLighting: payload
+            }
+        },
     }
 })
 
@@ -62,5 +69,6 @@ export const {
     setRowSize,
     setAppFromJson,
     setLastQueue,
-    setLoading
+    setLoading,
+    setTaskLighting
 } = appSlice.actions;
