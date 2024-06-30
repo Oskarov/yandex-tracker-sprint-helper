@@ -121,25 +121,31 @@ const TaskCard: React.FC<TaskCardProps> = ({item, provided, snapshot, performerL
             </Tooltip>
         </div>}
         {![TASK_TYPES_ENUM.MEETINGS, TASK_TYPES_ENUM.REVIEW, TASK_TYPES_ENUM.VACATION, TASK_TYPES_ENUM.HOLLYDAYS].includes(item.type) &&
-        <div>
-            <div className={styles.number}>
-                <a href={`https://tracker.yandex.ru/${item.number}`}
-                   target={"_blank"} rel={"noreferrer`"}>{item.number}</a>
-                <Tooltip title={item.inSprintDisplay || 'без спринта'}>
-                    <div className={CN(styles.sprint, {[styles.noSprint]: !item.inSomeSprint})}/>
-                </Tooltip>
-            </div>
-            <div className={styles.name}>
-                <div className={CN(styles.estimation, {[styles.notEstimated]: !item.hasEstimate})}>{item.capacity}</div>
-                <Tooltip title={`[${item.project}] ${item.number} ${item.name} (${item.capacity})`}>
-                    <span>{item.name}</span>
-                </Tooltip>
-            </div>
-            {!!item.component && <div className={styles.projectMarker} style={{backgroundColor: '#009dff52'}}>
-                {item.component}
-            </div>}
+            <div>
+                <div className={styles.number}>
+                    <a href={`https://tracker.yandex.ru/${item.number}`}
+                       target={"_blank"} rel={"noreferrer`"}>{item.number}</a>
+                    <Tooltip title={item.inSprintDisplay || 'без спринта'}>
+                        <div className={CN(styles.sprint, {[styles.noSprint]: !item.inSomeSprint})}/>
+                    </Tooltip>
+                </div>
+                <div className={styles.name}>
+                    <div
+                        className={CN(styles.estimation, {[styles.notEstimated]: !item.hasEstimate})}>{item.capacity}</div>
+                    <Tooltip title={`[${item.project}] ${item.number} ${item.name} (${item.capacity})`}>
+                        <span>{item.name}</span>
+                    </Tooltip>
+                </div>
+                <div className={styles.projectMarker}
+                     style={{backgroundColor: !!item.infoSystem ? '#009dff52' : '#ec1c1c'}}>
+                    {item.infoSystem || 'Не указана система'}
+                </div>
+                <div className={styles.projectMarker2}
+                     style={{backgroundColor: !!item.informationAssets ? 'rgba(85,0,255,0.32)' : '#ec651c'}}>
+                    {item.informationAssets || 'Не указан актив'}
+                </div>
 
-        </div>}
+            </div>}
         <TaskMenu contextMenu={contextMenu} setContextMenu={setContextMenu} performerLink={performerLink} task={item}/>
     </div>;
 

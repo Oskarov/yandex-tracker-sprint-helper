@@ -10,7 +10,9 @@ export interface ITask {
     hasEstimate: boolean,
     inSomeSprint: boolean,
     inSprintDisplay?: string,
-    inSprintId?: string
+    inSprintId?: string,
+    infoSystem?: string,
+    informationAssets?: string
 }
 
 export interface ITasksState {

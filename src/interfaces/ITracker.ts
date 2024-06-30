@@ -33,6 +33,8 @@ export interface ITrackerQueueTask {
         id: string,
         display: string
     }[],
+    informationAssets?: string,
+    infoSystem?: string,
     project?: {
         id: string,
         display: string

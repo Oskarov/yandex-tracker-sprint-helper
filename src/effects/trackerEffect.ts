@@ -1,15 +1,15 @@
-import {Dispatch}                                 from 'redux';
-import {addPerformer, editTaskForPerformer}       from "../slices/performers";
-import {generateRandomString}                     from "../utils/generateRandomString";
-import QueueService                               from "../api/queue-service";
-import {changeProjects, changeQueues}             from "../slices/tracker";
-import {IProjects, ITrackerQueueTask}             from "../interfaces/ITracker";
-import {store}                                    from "../store/store";
-import calculateHoursFromTrackerTack              from "../utils/calculateHoursFromTrackerTack";
-import CalculateTypeFromTrackerTack               from "../utils/calculateTypeFromTrackerTack";
+import {Dispatch} from 'redux';
+import {addPerformer, editTaskForPerformer} from "../slices/performers";
+import {generateRandomString} from "../utils/generateRandomString";
+import QueueService from "../api/queue-service";
+import {changeProjects, changeQueues} from "../slices/tracker";
+import {IProjects, ITrackerQueueTask} from "../interfaces/ITracker";
+import {store} from "../store/store";
+import calculateHoursFromTrackerTack from "../utils/calculateHoursFromTrackerTack";
+import CalculateTypeFromTrackerTack from "../utils/calculateTypeFromTrackerTack";
 import {changeBoards, changeSprints, changeUsers} from "../slices/trackerNoMemo";
-import SprintService                              from "../api/sprint-service";
-import {setLoading}                               from "../slices/app";
+import SprintService from "../api/sprint-service";
+import {setLoading} from "../slices/app";
 
 export const getAllQueuesAction = () => {
     return async function (dispatch: Dispatch<any>) {
@@ -246,6 +246,9 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
             performers.forEach(performer => {
                 performer.tasks.forEach(task => {
                     if (task.number === trackerTask.key) {
+                        if (task.number === 'TMS-578') {
+                            console.log(trackerTask);
+                        }
                         pass = true;
                         dispatch(editTaskForPerformer({
                             performerUuid: performer.uuid,
@@ -261,7 +264,9 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                                 hasEstimate: !!trackerTask.originalEstimation,
                                 inSomeSprint: !!trackerTask.sprint && !!trackerTask.sprint.length,
                                 inSprintDisplay: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].display : '',
-                                inSprintId: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].id : ''
+                                inSprintId: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].id : '',
+                                infoSystem: !!trackerTask.infoSystem ? trackerTask.infoSystem : '',
+                                informationAssets: !!trackerTask.informationAssets ? trackerTask.informationAssets : '',
                             }
                         }))
                     }
