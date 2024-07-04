@@ -47,7 +47,8 @@ export interface ITrackerQueueTask {
     sprint: {
       display:string,
       id: string,
-    }[]
+    }[],
+    spent? : string
 }
 
 export interface IProjects {
@@ -100,5 +101,6 @@ export interface ITrackerState {
 export interface ITrackerNoMemoState {
     boards: ITrackerBoard[],
     sprints: ITrackerSprint[],
-    users: ITrackerUser[]
+    users: ITrackerUser[],
+    tasksForTime: ITrackerQueueTask[]
 }

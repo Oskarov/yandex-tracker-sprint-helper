@@ -5,14 +5,15 @@ import {
     IProjects,
     ITrackerBoard,
     ITrackerNoMemoState,
-    ITrackerQueueImport, ITrackerSprint,
+    ITrackerQueueImport, ITrackerQueueTask, ITrackerSprint,
     ITrackerState, ITrackerUser
-}                                                                from "../interfaces/ITracker";
+} from "../interfaces/ITracker";
 
 const initialState: ITrackerNoMemoState = {
     boards: [],
     sprints: [],
     users: [],
+    tasksForTime: []
 }
 
 const trackerNoMemoSlice = createSlice({
@@ -37,6 +38,12 @@ const trackerNoMemoSlice = createSlice({
                 users: payload
             };
         },
+        changeTasks: (state, {payload}: PayloadAction<ITrackerQueueTask[]>) => {
+            return {
+                ...state,
+                tasksForTime: payload
+            };
+        },
 
     }
 })
@@ -45,5 +52,6 @@ export const trackerNoMemoReducer = trackerNoMemoSlice.reducer;
 export const {
     changeBoards,
     changeSprints,
-    changeUsers
+    changeUsers,
+    changeTasks
 } = trackerNoMemoSlice.actions;

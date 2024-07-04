@@ -10,6 +10,7 @@ import ToggleAllProjects          from "./toggleAllProjects/toggleAllProjects";
 import {getAllTasksByQueueKey}    from "../../../effects/trackerEffect";
 import ToTracker                  from "./toTracker/toTracker";
 import ToggleTaskLight            from "./toggleTaskLight/toggleTaskLight";
+import TimeFromTracker from "./timeFromTracker/timeFromTracker";
 
 interface HeaderProps {
 
@@ -26,6 +27,7 @@ const Header: React.FC<HeaderProps> = () => {
             <FromTracker/>
             <ToggleAllProjects/>
             <ToggleTaskLight/>
+            <TimeFromTracker/>
         </div>
         {!!lastQueue && <div className={styles.buttons}>
             <div>{lastQueue.name}</div>

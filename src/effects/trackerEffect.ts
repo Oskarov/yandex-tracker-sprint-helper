@@ -7,7 +7,7 @@ import {IProjects, ITrackerQueueTask} from "../interfaces/ITracker";
 import {store} from "../store/store";
 import calculateHoursFromTrackerTack from "../utils/calculateHoursFromTrackerTack";
 import CalculateTypeFromTrackerTack from "../utils/calculateTypeFromTrackerTack";
-import {changeBoards, changeSprints, changeUsers} from "../slices/trackerNoMemo";
+import {changeBoards, changeSprints, changeTasks, changeUsers} from "../slices/trackerNoMemo";
 import SprintService from "../api/sprint-service";
 import {setLoading} from "../slices/app";
 
@@ -102,7 +102,7 @@ export const getAllTasksByQueueKey = (queueKey: string) => {
     }
 }
 
-export const getAllTasksBySprintId = (id: number, forRemove: boolean, startUploading: boolean) => {
+export const getAllTasksBySprintId = (id: number, forRemove: boolean, startUploading: boolean, saving: boolean) => {
     return async function (dispatch: Dispatch<any>) {
         dispatch(setLoading(`Загрузка спринта, получение задач.`));
         const response = await QueueService.getAllTasksBySprint(id);
@@ -119,6 +119,9 @@ export const getAllTasksBySprintId = (id: number, forRemove: boolean, startUploa
                             if (page < totalPages) {
                                 await getNewResult(++page);
                             } else {
+                                if (saving) {
+                                    dispatch(changeTasks(result));
+                                }
                                 if (forRemove) {
                                     dispatch(removeSprintFromTasks(result, id, true));
                                 } else {
@@ -130,6 +133,9 @@ export const getAllTasksBySprintId = (id: number, forRemove: boolean, startUploa
                 }
                 await getNewResult(2);
             } else {
+                if (saving) {
+                    dispatch(changeTasks(result));
+                }
                 if (forRemove) {
                     dispatch(removeSprintFromTasks(result, id, true));
                 } else {
@@ -246,7 +252,7 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
             performers.forEach(performer => {
                 performer.tasks.forEach(task => {
                     if (task.number === trackerTask.key) {
-                        if (task.number === 'TMS-578') {
+                        if (task.number === 'TMS-604') {
                             console.log(trackerTask);
                         }
                         pass = true;
@@ -272,7 +278,7 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                     }
                 })
             });
-            if (!pass) {
+            if (!pass && CalculateTypeFromTrackerTack(trackerTask.type.key) === 50 && trackerTask.project?.display != 'Администрация') {
                 const project = trackerTask.project?.id ? trackerTask.project?.id : '0';
                 let projectTasks = projects[project]?.tasks || [];
                 let projectOpen = projects[project]?.isOpen || true;
@@ -290,7 +296,9 @@ export const setTasksFromTracker = (trackerTasks: ITrackerQueueTask[]) => {
                         hasEstimate: !!trackerTask.originalEstimation,
                         inSomeSprint: !!trackerTask.sprint && !!trackerTask.sprint.length,
                         inSprintDisplay: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].display : '',
-                        inSprintId: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].id : ''
+                        inSprintId: !!trackerTask.sprint && !!trackerTask.sprint.length ? trackerTask.sprint[0].id : '',
+                        infoSystem: !!trackerTask.infoSystem ? trackerTask.infoSystem : '',
+                        informationAssets: !!trackerTask.informationAssets ? trackerTask.informationAssets : '',
                     }]
                 }
             }

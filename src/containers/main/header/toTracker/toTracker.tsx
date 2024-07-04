@@ -46,7 +46,7 @@ const ToTracker: React.FC<FromTrackerProps> = ({}) => {
 
     const handleChange = () => {
         if (chosenSprint) {
-            dispatch(getAllTasksBySprintId(chosenSprint, true, true))
+            dispatch(getAllTasksBySprintId(chosenSprint, true, true, false))
         }
     }
 

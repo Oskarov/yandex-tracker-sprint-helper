@@ -2,17 +2,17 @@
   height: 600px;
 }
 
-.autoInput{
+.autoInput {
   margin-bottom: 16px;
 }
 
-.sprintButtons{
+.sprintButtons {
   padding-top: 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  >*{
+  > * {
     width: 49%;
   }
 }
